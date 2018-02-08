@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+    <!-- 使用spring自带的占位符替换功能 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <!-- 允许JVM参数覆盖
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />-->
+        <!-- 忽略没有找到的资源文件 -->
+        <property name="ignoreResourceNotFound" value="true" />
+        <!-- 配置资源文件 -->
+        <property name="locations">
+            <list>
+                <value>classpath:properties/jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 数据库连接池 :usersDataSource -->
+    <bean id="defaultDataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          init-method="init" destroy-method="close">
+        <!-- 数据库驱动 -->
+        <property name="driverClassName" value="${default.jdbc.driver}" />
+        <!-- 相应驱动的jdbcUrl -->
+        <property name="url" value="${default.jdbc.url}" />
+        <!-- 数据库的用户名 -->
+        <property name="username" value="${default.jdbc.username}" />
+        <!-- 数据库的密码 -->
+        <property name="password" value="${default.jdbc.password}" />
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="1" />
+        <!-- 每个分区最大的连接数 -->
+        <property name="maxActive" value="150" />
+        <!-- 每个分区最小的连接数 -->
+        <property name="minIdle" value="5" />
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="10000" />
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+
+        <property name="testWhileIdle" value="true" />
+
+        <!-- 这里建议配置为TRUE，防止取到的连接不可用 -->
+        <property name="testOnBorrow" value="true" />
+        <property name="testOnReturn" value="false" />
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="true" />
+        <property name="maxPoolPreparedStatementPerConnectionSize"
+                  value="20" />
+
+        <!-- 这里配置提交方式，默认就是TRUE，可以不用配置 -->
+        <property name="defaultAutoCommit" value="true" />
+
+        <!-- 验证连接有效与否的SQL，不同的数据配置不同 -->
+        <property name="validationQuery" value="select 1 " />
+        <property name="filters" value="stat" />
+        <property name="proxyFilters">
+            <list>
+                <ref bean="logFilter" />
+            </list>
+        </property>
+    </bean>
+    <!-- 数据库连接池 :productDataSource -->
+    <bean id="productDataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          destroy-method="close">
+        <!-- 数据库驱动 -->
+        <property name="driverClassName" value="${product.jdbc.driver}" />
+        <!-- 相应驱动的jdbcUrl -->
+        <property name="url" value="${product.jdbc.url}" />
+        <!-- 数据库的用户名 -->
+        <property name="username" value="${product.jdbc.username}" />
+        <!-- 数据库的密码 -->
+        <property name="password" value="${product.jdbc.password}" />
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="1" />
+        <!-- 每个分区最大的连接数 -->
+        <property name="maxActive" value="150" />
+        <!-- 每个分区最小的连接数 -->
+        <property name="minIdle" value="5" />
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="10000" />
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+
+        <property name="testWhileIdle" value="true" />
+
+        <!-- 这里建议配置为TRUE，防止取到的连接不可用 -->
+        <property name="testOnBorrow" value="true" />
+        <property name="testOnReturn" value="false" />
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="true" />
+        <property name="maxPoolPreparedStatementPerConnectionSize"
+                  value="20" />
+
+        <!-- 这里配置提交方式，默认就是TRUE，可以不用配置 -->
+        <property name="defaultAutoCommit" value="true" />
+
+        <!-- 验证连接有效与否的SQL，不同的数据配置不同 -->
+        <property name="validationQuery" value="select 1 " />
+        <property name="filters" value="stat" />
+        <property name="proxyFilters">
+            <list>
+                <ref bean="logFilter" />
+            </list>
+        </property>
+    </bean>
+
+    <!-- 数据库连接池 动态数据库-->
+    <bean id="dynamicDataSource" class="com.lomen.mybatisdemo.ultis.DynamicDataSource">
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <entry value-ref="defaultDataSource" key="defaultDataSource" />
+                <entry value-ref="productDataSource" key="productDataSource" />
+            </map>
+        </property>
+
+        <!-- 默认使用defaultDataSource的数据源 -->
+        <property name="defaultTargetDataSource" ref="defaultDataSource" />
+    </bean>
+
+    <bean id="logFilter" class="com.alibaba.druid.filter.logging.Slf4jLogFilter">
+        <property name="statementExecutableSqlLogEnable" value="false" />
+    </bean>
+
+    <!--Spring容器中注册非@controller注解的Bean -->
+    <context:component-scan base-package="com.lomen.mybatisdemo">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+   <!--  定义Mybatis的SqlSessionFactory
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        &lt;!&ndash; 定义数据源,数据源使用动态的数据源dynamicDataSource &ndash;&gt;
+        <property name="dataSource" ref="dynamicDataSource" />
+        &lt;!&ndash; 指定mybatis全局配置文件 &ndash;&gt;
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+        &lt;!&ndash; 别名扫描Entity包&ndash;&gt;
+        <property name="typeAliasesPackage" value="com.lomen.mybatisdemo.user.model" />
+        &lt;!&ndash; 扫描mappers目录以及子目录下的所有xml文件 &ndash;&gt;
+        <property name="mapperLocations" value="classpath:mapper/*.xml" />
+
+    </bean>
+    &lt;!&ndash; 定义Mapper接口扫描器 &ndash;&gt;
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        &lt;!&ndash;一个 以上的 DataSource需要注入sqlSessionFactory&ndash;&gt;
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        &lt;!&ndash;给出需要扫描的dao接口包 &ndash;&gt;
+        <property name="basePackage" value="com.lomen.mybatisdemo.user.dao" />
+
+    </bean>
+
+    &lt;!&ndash; Spring容器中注册非@controller注解的Bean &ndash;&gt;
+    <context:component-scan base-package="com.lomen.mybatisdemo">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    &lt;!&ndash; 定义事务管理器 &ndash;&gt;
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        &lt;!&ndash; 使用动态的数据源dynamicDataSource &ndash;&gt;
+        <property name="dataSource" ref="dynamicDataSource" />
+    </bean>
+
+    &lt;!&ndash; 配置基于注解的声明式事务 &ndash;&gt;
+    <tx:annotation-driven transaction-manager="transactionManager" />
+    &lt;!&ndash; AOP自动代理功能 &ndash;&gt;
+    <aop:aspectj-autoproxy proxy-target-class="true" />-->
+    <!--配置SqlSessionFactory-->
+    <import resource="applicationContex-mybatis.xml" />
+    <!-- 导入Mybatis配置-->
+    <import resource="application-transaction.xml" />
+
+
+</beans>
