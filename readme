@@ -2,3 +2,4 @@ spring4+springmvc4+mybatis3.3.0+druid多数据源demo，同时支持mybatis gene
 java静态代码分析插件checkstyle的应用
 项目在intelij idea中测试通过
 新增分页插件，使用mybatis的插件拦截功能，插件代码见：com.lomen.mybatisdemo.plugin.pagehelper
+新增mybatis的sql日志打印配置
