@@ -10,16 +10,23 @@
 
     <!-- 一个数据库一个context -->
     <context id="sampledb" targetRuntime="MyBatis3">
+        <!-- 指定生成的java文件的编码,没有直接生成到项目时中文可能会乱码 -->
+        <property name="javaFileEncoding" value="UTF-8"></property>
+
         <!-- 配置内置的或者自定义的Plugin,有缺陷：不同主键类型 不能通用
         <plugin type="com.lomen.mybatisdemo.plugin.BaseMapperGeneratorPlugin" />-->
 
         <!-- 生成的pojo，将implements Serializable-->
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
-        <!-- 注释 -->
-        <commentGenerator>
-            <property name="suppressAllComments" value="true"/><!-- 是否取消注释 -->
-            <property name="suppressDate" value="true"/> <!-- 是否生成注释代时间戳-->
+
+        <!-- 自定义注释类全路径 -->
+        <commentGenerator type="com.lomen.mybatisdemo.plugin.MyCommentGenerator">
         </commentGenerator>
+        <!-- 默认注释
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>&lt;!&ndash; 是否取消注释 &ndash;&gt;
+            <property name="suppressDate" value="true"/> &lt;!&ndash; 是否生成注释代时间戳&ndash;&gt;
+        </commentGenerator>-->
 
         <!-- jdbc连接 -->
         <jdbcConnection driverClass="${jdbc.driverClassName}"
@@ -68,15 +75,10 @@
             <!-- 指定列的java数据类型
             <columnOverride column="列名" jdbcType="VARCHAR"/>-->
         </table>
-        <table tableName="t_login_log" domainObjectName="LoginLogEntity"  enableCountByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false"
-               enableUpdateByExample="false">
-        </table>
+
         <table tableName="t_test" domainObjectName="TestEntity"  enableCountByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                enableUpdateByExample="false"></table>
-        <table tableName="t_type" domainObjectName="TypeEntity"  enableCountByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false"
-               enableUpdateByExample="false"></table>
+
     </context>
 </generatorConfiguration>

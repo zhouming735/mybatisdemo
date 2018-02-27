@@ -1,41 +1,41 @@
 package com.lomen.mybatisdemo.user.dao;
 
-import com.lomen.mybatisdemo.user.model.UserEntity;
+import com.lomen.mybatisdemo.user.model.TestEntity;
 
-public interface UserEntityMapper {
+public interface TestEntityMapper {
     /**
      *
      * @mbggenerated 2018-02-08
      */
-    int deleteByPrimaryKey(Integer userId);
-
-    /**
-     *
-     * @mbggenerated 2018-02-08
-     */
-    int insert(UserEntity record);
+    int deleteByPrimaryKey(String id);
 
     /**
      *
      * @mbggenerated 2018-02-08
      */
-    int insertSelective(UserEntity record);
+    int insert(TestEntity record);
 
     /**
      *
      * @mbggenerated 2018-02-08
      */
-    UserEntity selectByPrimaryKey(Integer userId);
+    int insertSelective(TestEntity record);
 
     /**
      *
      * @mbggenerated 2018-02-08
      */
-    int updateByPrimaryKeySelective(UserEntity record);
+    TestEntity selectByPrimaryKey(String id);
 
     /**
      *
      * @mbggenerated 2018-02-08
      */
-    int updateByPrimaryKey(UserEntity record);
+    int updateByPrimaryKeySelective(TestEntity record);
+
+    /**
+     *
+     * @mbggenerated 2018-02-08
+     */
+    int updateByPrimaryKey(TestEntity record);
 }
